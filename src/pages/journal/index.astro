@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { JOURNAL_PAGE } from '@src/consts';
+import JournalList from '@src/components/JournalList.astro';
+
+type Journal = CollectionEntry<'journal'>;
+const title = JOURNAL_PAGE.pageTitle;
+const description = JOURNAL_PAGE.seo_description;
+
+const journalEntries = (await getCollection('journal')).sort(
+	(a: Journal, b: Journal) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout title={title} description={description}>
+	<div class='container'>
+		<div class='mb-10 text-center'>
+			<h1 class='text-3xl font-bold mb-2'>{JOURNAL_PAGE.heading}</h1>
+			<p class='text-zinc-700 dark:text-zinc-300 text-lg'>{JOURNAL_PAGE.subHeading}</p>
+		</div>
+		<JournalList journals={journalEntries} />
+	</div>
+</BaseLayout>

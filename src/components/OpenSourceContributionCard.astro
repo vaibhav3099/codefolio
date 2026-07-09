@@ -1,0 +1,91 @@
+---
+import type { OpenSourceContribution } from '../pages/projects/projects';
+import { Image } from 'astro:assets';
+
+import GithubWhite from '@src/assets/img/github-mark-white.svg';
+import GithubBlack from '@src/assets/img/github-mark.svg';
+import LinkArrowWhite from '@src/assets/img/link-arrow-white.svg';
+import LinkArrowBlack from '@src/assets/img/link-arrow-black.svg';
+
+interface Props {
+	contribution: OpenSourceContribution;
+}
+
+const { contribution } = Astro.props as Props;
+---
+
+<div class='flex flex-col col-span-12 sm:col-span-6 lg:col-span-4 border dark:border-zinc-700 rounded-xl shadow-sm p-5'>
+	<div class='flex justify-between items-center'>
+		<div class='flex gap-2'>
+			{
+				(contribution.tags || [])?.map((tag: string) => (
+					<span
+						class='border border-zinc-300 dark:border-zinc-700 rounded-2xl
+                    text-sm text-zinc-700 dark:text-zinc-300 no-underline px-2 py-0.5
+                    transition-all duration-700
+                  hover:border-zinc-700 dark:hover:border-zinc-300'>
+						{tag}
+					</span>
+				))
+			}
+		</div>
+	</div>
+	<h3 class='font-semibold my-2'>
+		<a class='inline-flex items-center gap-2' href={contribution.repoLink} target='_blank'>
+			<div class='github-image-container inline-block'>
+				<Image src={GithubBlack} class='dark:hidden h-[1em] w-auto' alt='Github' />
+				<Image src={GithubWhite} class='hidden dark:block h-[1em] w-auto' alt='Github' />
+			</div>
+			<span class='underline'>{contribution.name}</span>
+		</a>
+	</h3>
+	<div class='line-clamp-2
+				text-zinc-600
+				dark:text-zinc-300
+				mb-4
+				min-h-[50px]'>
+		<p title={contribution.description}>{contribution.description}</p>
+	</div>
+	<div class='extra-space grow'></div>
+	<div class='flex justify-end gap-3'>
+		{
+			contribution.postLink && (
+				<a class='underline flex items-center gap-2' href={contribution.postLink}>
+					Article
+				</a>
+			)
+		}
+		{
+			contribution.prLink && (
+				<a class='underline flex items-center gap-1' href={contribution.prLink} target='_blank'>
+					PR
+					<Image src={LinkArrowBlack} class='dark:hidden h-[1em] w-auto' alt='Link to PR' />
+					<Image src={LinkArrowWhite} class='hidden dark:block h-[1em] w-auto' alt='Link to PR' />
+				</a>
+			)
+		}
+
+		{
+			contribution.demoLink && ( // This line adds the conditional check for the Demo link
+				<a class='underline flex items-center gap-2' href={contribution.demoLink} target='_blank' rel={contribution.demoLinkRel}>
+					Demo
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						width='14'
+						height='14'
+						viewBox='0 0 24 24'
+						fill='none'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						class='lucide lucide-external-link'>
+						<path d='M15 3h6v6' />
+						<path d='M10 14 21 3' />
+						<path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' />
+					</svg>
+				</a>
+			)
+		}
+	</div>
+</div>

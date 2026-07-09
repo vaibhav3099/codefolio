@@ -1,0 +1,113 @@
+---
+import Prose from '../components/Prose.astro';
+import { Image } from 'astro:assets';
+import FormattedDate from '../components/FormattedDate.astro';
+import AboutTheAuthor from '../components/widgets/AboutTheAuthor.astro';
+import TableOfContent from '../components/widgets/TableOfContent.astro';
+import { slugify } from '../utils';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
+import Tag from './Tag.astro';
+
+export interface Props {
+	title: string;
+	tags: string[] | undefined;
+	updatedDate: Date | undefined;
+	pubDate: Date;
+	coverImage: ImageMetadata | undefined;
+	Content: AstroComponentFactory;
+	GISCUS_REPO: string;
+	GISCUS_REPO_ID: string;
+	GISCUS_CATEGORY: string;
+	GISCUS_CATEGORY_ID: string;
+	headings: unknown;
+}
+const {
+	title,
+	tags,
+	updatedDate,
+	pubDate,
+	coverImage,
+	Content,
+	GISCUS_REPO,
+	GISCUS_REPO_ID,
+	GISCUS_CATEGORY,
+	GISCUS_CATEGORY_ID,
+	headings
+} = Astro.props;
+---
+
+<div class='container lg:flex gap-10'>
+	<main class='overflow-hidden grow'>
+		<article>
+			<Prose>
+				<div>
+					<h1 class='!my-1 leading-tight'>{title}</h1>
+					<div
+						class='text-sm font-[500] mt-2 sm:mt-0 py-1 md:text-right flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center'
+					>
+						{
+							(
+								<div class='flex flex-wrap gap-2'>
+									{(tags || [])?.map((tag: string) => (
+										<Tag label={tag} href={`/tags/${slugify(tag)}`} />
+									))}
+								</div>
+							)
+						}
+						<div>
+							{
+								updatedDate ? (
+									<>
+										Updated on{' '}
+										<strong>
+											<FormattedDate date={updatedDate} />
+										</strong>
+									</>
+								) : (
+									<>
+										Published on{' '}
+										<strong>
+											<FormattedDate date={pubDate} />
+										</strong>
+									</>
+								)
+							}
+						</div>
+					</div>
+				</div>
+				<div class='py-3 overflow-hidden'>
+					{coverImage && <Image class='rounded-3xl w-full m-0 lg:mb-2' src={coverImage} alt={title} loading='eager' />}
+				</div>
+				<Content />
+			</Prose>
+			{
+				GISCUS_REPO && (
+					<script
+						id='giscus-script'
+						is:inline
+						src='https://giscus.app/client.js'
+						data-repo={GISCUS_REPO}
+						data-repo-id={GISCUS_REPO_ID}
+						data-category={GISCUS_CATEGORY}
+						data-category-id={GISCUS_CATEGORY_ID}
+						data-mapping='pathname'
+						data-strict='0'
+						data-reactions-enabled='1'
+						data-emit-metadata='0'
+						data-input-position='bottom'
+						data-theme='preferred_color_scheme'
+						data-lang='en'
+						crossorigin='anonymous'
+						async
+					/>
+				)
+			}
+		</article>
+	</main>
+	<div class='shrink-0 w-[280px] hidden md:block'>
+		<div class='mb-4'>
+			<AboutTheAuthor />
+		</div>
+		<TableOfContent headings={headings} />
+	</div>
+</div>

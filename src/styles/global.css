@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+	pre,
+	code {
+		font-size: 0.875rem;
+	}
+}
+
+:root {
+	--color-kofi-dark: #202020;
+	--color-kofi-yellow: #e3d6c6;
+	--color-kofi-white: #ffffff;
+}
+
+@font-face {
+	font-family: 'Excalifont';
+	src: url('/fonts/Excalifont-Regular.woff2') format('woff2');
+	font-style: normal;
+	font-weight: normal;
+}
+
+.handwritten {
+	font-family: Excalifont, sans-serif;
+}

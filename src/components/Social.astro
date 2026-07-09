@@ -1,0 +1,20 @@
+---
+import { type SocialItem } from '@src/socials';
+
+interface Props {
+	socialItem: SocialItem;
+}
+const { socialItem } = Astro.props;
+
+// renaming to capital case to render it directly
+const Logo = socialItem.logo;
+
+const a_classes: string =
+	'border text-zinc-700 border-zinc-700 rounded-md px-2 py-1 inline-flex items-center gap-2 group hover:bg-zinc-300 ';
+const a_classes_dark: string = 'dark:text-zinc-300 dark:border-zinc-300 dark:hover:bg-zinc-700';
+---
+
+<a class={`${a_classes} ${a_classes_dark}`} title={socialItem.title} href={socialItem.link} target='_blank'>
+	<Logo class='w-5 h-5 inline-block transition-transform group-hover:scale-110' />
+	<span>{socialItem.name}</span>
+</a>

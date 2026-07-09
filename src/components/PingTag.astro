@@ -1,0 +1,20 @@
+---
+interface Props {
+	label: string;
+}
+const { label } = Astro.props;
+---
+
+<div
+	class='inline-flex rounded-full items-center gap-2 px-2 py-1 text-sm h-11
+border border-lime-700 bg-lime-200 dark:border-lime-200 dark:bg-lime-700
+text-emerald-800'
+>
+	<span class='relative inline-flex'>
+		<span class='absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-700 dark:bg-lime-200 opacity-75'></span>
+		<span class='relative inline-flex h-2.5 w-2.5 bg-lime-700 dark:bg-lime-200 rounded-full'></span>
+	</span>
+	<span class='text-lime-700 dark:text-lime-200'>{label}</span>
+</div>
+
+<style></style>

@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostsByYear from '../../components/PostsByYear.astro';
+import { POSTS_PAGE } from '@src/consts';
+
+type BlogPost = CollectionEntry<'blog'>;
+const title = POSTS_PAGE.pageTitle;
+const description = POSTS_PAGE.seo_description;
+
+const posts = (await getCollection('blog')).sort((a: BlogPost, b: BlogPost) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title={title} description={description}>
+	<div class='container'>
+		<div class='mb-10 text-center'>
+			<h1 class='text-3xl font-bold mb-2'>{POSTS_PAGE.heading}</h1>
+			<p class='text-zinc-700 dark:text-zinc-300 text-lg'>{POSTS_PAGE.subHeading}</p>
+		</div>
+		<PostsByYear posts={posts} />
+	</div>
+</BaseLayout>

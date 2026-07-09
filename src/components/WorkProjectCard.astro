@@ -1,0 +1,89 @@
+---
+import type { WorkProject } from '../pages/projects/projects';
+import { Image } from 'astro:assets';
+
+import LinkArrowWhite from '@src/assets/img/link-arrow-white.svg';
+import LinkArrowBlack from '@src/assets/img/link-arrow-black.svg';
+
+import DefaultCompanyWhite from '@src/assets/company/default-company-white.svg';
+import DefaultCompanyBlack from '@src/assets/company/default-company-black.svg';
+
+interface Props {
+	workProject: WorkProject;
+}
+
+const { workProject } = Astro.props as Props;
+---
+
+<div class='flex flex-col col-span-12 sm:col-span-6 lg:col-span-4 border dark:border-zinc-700 rounded-xl shadow-sm p-5'>
+	<div class='flex justify-between items-center'>
+		<div class='flex gap-2'>
+			{
+				(workProject.tags || [])?.map((tag: string) => (
+					<span
+						class='border border-zinc-300 dark:border-zinc-700 rounded-2xl
+                    text-sm text-zinc-700 dark:text-zinc-300 no-underline px-2 py-0.5
+                    transition-all duration-700
+                  hover:border-zinc-700 dark:hover:border-zinc-300'>
+						{tag}
+					</span>
+				))
+			}
+		</div>
+	</div>
+	<h3 class='font-semibold my-2'>
+		<a {...workProject?.demoLink ? { href: workProject.demoLink } : {}} target='_blank'>
+			<span class={workProject?.demoLink ? 'underline' : ''}>{workProject.name}</span>
+		</a>
+	</h3>
+	<div class='line-clamp-2 inline-flex items-center gap-2
+				text-zinc-600
+				dark:text-zinc-300 mb-4'>
+		<div class='company-image-container inline-block'>
+			<Image
+				src={workProject.associatedCompany?.logoColor ?? workProject.associatedCompany?.logoWhite ?? DefaultCompanyWhite}
+				class='hidden dark:block h-[1em] w-auto'
+				alt={workProject.associatedCompany.name}
+			/>
+			<Image
+				src={workProject.associatedCompany?.logoColor ?? workProject.associatedCompany?.logoBlack ?? DefaultCompanyBlack}
+				class='dark:hidden h-[1em] w-auto'
+				alt={workProject.associatedCompany.name}
+			/>
+		</div>
+
+		<span
+			>Associated with <a
+				{...workProject.associatedCompany?.website ? { href: workProject.associatedCompany.website, class: 'underline' } : {}}
+				target='_blank'>{workProject.associatedCompany.name}</a
+			></span
+		>
+	</div>
+
+	<div class='line-clamp-2
+				text-zinc-600
+				dark:text-zinc-300
+				mb-4
+				min-h-[50px]'>
+		<p title={workProject.description}>{workProject.description}</p>
+	</div>
+	<div class='extra-space grow'></div>
+	<div class='flex justify-end gap-3'>
+		{
+			workProject.postLink && (
+				<a class='underline flex items-center gap-2' href={workProject.postLink}>
+					Article
+				</a>
+			)
+		}
+		{
+			workProject.demoLink && (
+				<a class='underline flex items-center gap-1' href={workProject.demoLink} rel={workProject.demoLinkRel} target='_blank'>
+					Demo
+					<Image src={LinkArrowBlack} class='dark:hidden h-[1em] w-auto' alt='Link to PR' />
+					<Image src={LinkArrowWhite} class='hidden dark:block h-[1em] w-auto' alt='Link to PR' />
+				</a>
+			)
+		}
+	</div>
+</div>

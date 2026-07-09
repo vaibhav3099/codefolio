@@ -1,0 +1,19 @@
+---
+import { POST_ITEM_PAGE } from '@src/consts';
+import Author from '../Author.astro';
+import { allSocials } from '@src/socials';
+import Social from '../Social.astro';
+---
+
+<div class='about-the-author py-4 border-b'>
+	<h3 class='font-extrabold uppercase mb-4 text-sm'>About the Author</h3>
+	<Author picSize='md' />
+	<div class='author-desc text-[.825rem] my-4'>
+		<p class='mb-3'>
+			{POST_ITEM_PAGE.author_desc}
+		</p>
+	</div>
+	<div class='social-links-container flex-wrap inline-flex gap-3'>
+		{allSocials.map((social) => <Social socialItem={social} />)}
+	</div>
+</div>

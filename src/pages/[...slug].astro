@@ -1,0 +1,78 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadEnv } from 'vite';
+import { render } from 'astro:content';
+import Article from '@src/components/Article.astro';
+import type { Props as ArticleProps } from '@src/components/Article.astro';
+
+const { GISCUS_REPO, GISCUS_REPO_ID, GISCUS_CATEGORY, GISCUS_CATEGORY_ID } = loadEnv(
+	process.env.NODE_ENV || 'production',
+	process.cwd(),
+	''
+);
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post: any) => ({
+		params: { slug: post.id },
+		props: post
+	}));
+}
+type Props = CollectionEntry<'blog'>;
+const post = Astro.props;
+const {
+	data: { title, seoTitle, description, coverImage, pubDate, updatedDate, tags }
+} = post;
+const { Content, headings } = await render(post);
+
+const articleProps: ArticleProps = {
+	Content,
+	headings,
+	coverImage,
+	GISCUS_CATEGORY,
+	GISCUS_CATEGORY_ID,
+	GISCUS_REPO,
+	GISCUS_REPO_ID,
+	pubDate,
+	tags,
+	title,
+	updatedDate
+};
+---
+
+<BaseLayout title={seoTitle || title} description={description} image={coverImage}>
+	<Article {...articleProps} />
+</BaseLayout>
+
+<script async is:inline>
+	const anchors = document.querySelectorAll('.prose h2[id], .prose h3[id]');
+	const links = document.querySelectorAll('nav.toc ul li a');
+
+	function observeToc() {
+		if (typeof anchors != 'undefined' && anchors != null && typeof links != 'undefined' && links != null) {
+			let scrollTop = window.scrollY;
+
+			// highlight the last scrolled-to: set everything inactive first
+			for (const link of links) {
+				link.classList.add('border-transparent', 'text-inherit');
+				link.classList.remove('bg-[var(--background-surface-color)]', 'border-[var(--soft-border-color)]', 'text-[var(--link-color)]');
+			}
+			// then iterate backwards, on the first match highlight it and break
+			for (var i = anchors.length - 1; i >= 0; i--) {
+				if (scrollTop > anchors[i].offsetTop - 80) {
+					links[i].classList.remove('border-transparent', 'text-inherit');
+					links[i].classList.add('bg-[var(--background-surface-color)]', 'border-[var(--soft-border-color)]', 'text-[var(--link-color)]');
+					break;
+				}
+			}
+		}
+	}
+
+	window.addEventListener('scroll', (event) => {
+		observeToc(event);
+	});
+	window.addEventListener('hashchange', (event) => {
+		observeToc(event);
+	});
+</script>

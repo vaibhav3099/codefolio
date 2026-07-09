@@ -1,0 +1,9 @@
+---
+import KofiSupportImage from '@src/assets/kofi/support_me_on_kofi_blue.png';
+import { KOFI } from '@src/socials';
+import { Image } from 'astro:assets';
+---
+
+<a class='w-60 block' href={KOFI.link} target='_blank'>
+	<Image src={KofiSupportImage} alt='Support me on Kofi' />
+</a>

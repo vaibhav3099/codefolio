@@ -1,0 +1,14 @@
+---
+import LinkArrowBlack from '@src/assets/img/link-arrow.svg';
+
+interface Props {
+	text: string;
+	url: string;
+}
+const { text, url }: Props = Astro.props;
+---
+
+<a class='underline inline-flex items-center gap-1 text-zinc-700 dark:text-zinc-300 group' href={url} target='_blank'>
+	{text}
+	<LinkArrowBlack class='h-[1em] w-auto transition-transform group-hover:scale-110' />
+</a>
